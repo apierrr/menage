@@ -1,0 +1,27 @@
+services:
+  menage:
+    build: .
+    image: menage
+    container_name: ${CONTAINER_NAME:-menage}
+    restart: unless-stopped
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "${PORT:-8000}"]
+    # Publié sur la boucle locale uniquement : l'app n'a pas d'authentification,
+    # voir « Exposer l'app » dans le README avant de l'ouvrir au monde.
+    ports:
+      - "127.0.0.1:${PORT:-8000}:${PORT:-8000}"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - TZ=${TZ:-Europe/Paris}
+      - DATABASE_URL=sqlite:////app/data/menage.db
+      # Fenêtre de calcul du % de répartition des tâches ponctuelles (jours)
+      - SHARE_WINDOW_DAYS=${SHARE_WINDOW_DAYS:-90}
+      # Optionnel : clé de signature du cookie d'identité.
+      # Si absente, elle est générée puis conservée dans data/secret.key
+      - SECRET_KEY=${SECRET_KEY:-}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:${PORT:-8000}/healthz')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

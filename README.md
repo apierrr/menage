@@ -20,6 +20,7 @@ Réglages facultatifs, dans un fichier `.env` à côté du `docker-compose.yml` 
 | ------------------- | --------------- | ------------------------------------------------------ |
 | `PORT`              | `8000`          | Port d'écoute, dans le container comme sur l'hôte      |
 | `CONTAINER_NAME`    | `menage`        | Nom du container (utile pour en faire tourner deux)    |
+| `IMAGE_NAME`        | `menage`        | Nom de l'image (à distinguer aussi pour deux clones)   |
 | `TZ`                | `Europe/Paris`  | Fuseau des décomptes en jours                          |
 | `SHARE_WINDOW_DAYS` | `90`            | Fenêtre de la jauge des tâches ponctuelles             |
 | `SECRET_KEY`        | générée         | Clé du cookie ; sinon créée dans `data/secret.key`     |

@@ -1,6 +1,8 @@
 services:
   menage:
     build: .
+    # Deux clones sur la même machine : donner à chacun son IMAGE_NAME.
+    image: ${IMAGE_NAME:-menage}
     container_name: ${CONTAINER_NAME:-menage}
     restart: unless-stopped
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "${PORT:-8000}"]

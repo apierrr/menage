@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import datetime as dt
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -13,6 +13,10 @@ Section = Literal["regular", "oneoff"]
 Kind = Literal["folder", "task"]
 PeriodKind = Literal["day", "week", "month"]
 RotationMode = Literal["equity", "round_robin"]
+
+# Détails d'une tâche : bornés, sinon une seule requête peut remplir le disque.
+MAX_BULLETS = 20
+Bullet = Annotated[str, Field(max_length=200)]
 
 
 def _check_color(value: str | None) -> str | None:
@@ -58,7 +62,7 @@ class TileIn(BaseModel):
     kind: Kind = "task"
     title: str = Field(min_length=1, max_length=120)
     color: str = "#3b82f6"
-    bullets: list[str] = Field(default_factory=list)
+    bullets: list[Bullet] = Field(default_factory=list, max_length=MAX_BULLETS)
 
     # Tâches régulières uniquement
     period_kind: PeriodKind | None = None
@@ -79,7 +83,7 @@ class TileIn(BaseModel):
 class TilePatch(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=120)
     color: str | None = None
-    bullets: list[str] | None = None
+    bullets: list[Bullet] | None = Field(default=None, max_length=MAX_BULLETS)
     period_kind: PeriodKind | None = None
     period_n: int | None = Field(default=None, ge=1, le=12)
     rotation_mode: RotationMode | None = None

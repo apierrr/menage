@@ -3,6 +3,10 @@ import { readableText, splitGradient } from '../colors'
 import ColorPicker from './ColorPicker'
 import Sheet from './Sheet'
 
+// Mêmes bornes que côté serveur (app/schemas.py).
+const MAX_BULLETS = 20
+const MAX_BULLET_LENGTH = 200
+
 // Même valeur que côté serveur : rien à refléter, donc rien à colorer.
 const NEUTRAL = '#475569'
 
@@ -136,14 +140,20 @@ export default function TileForm({
       setError('Il faut un titre.')
       return
     }
-    const period = PERIODS[periodIndex]
-    const payload = {
-      title: title.trim(),
-      bullets: details
-        .split('\n')
-        .map((line) => line.replace(/^[-•*]\s*/, '').trim())
-        .filter(Boolean),
+    const bullets = details
+      .split('\n')
+      .map((line) => line.replace(/^[-•*]\s*/, '').trim())
+      .filter(Boolean)
+    if (bullets.length > MAX_BULLETS) {
+      setError(`${MAX_BULLETS} puces au maximum (${bullets.length} pour l’instant).`)
+      return
     }
+    if (bullets.some((line) => line.length > MAX_BULLET_LENGTH)) {
+      setError(`Une puce fait ${MAX_BULLET_LENGTH} caractères au maximum.`)
+      return
+    }
+    const period = PERIODS[periodIndex]
+    const payload = { title: title.trim(), bullets }
     if (section !== 'regular') payload.color = color
     if (effectiveKind === 'task') payload.member_ids = members
 
@@ -205,7 +215,7 @@ export default function TileForm({
 
       {effectiveKind === 'task' && (
         <label className="field">
-          <span>Détails (une puce par ligne)</span>
+          <span>Détails (une puce par ligne, {MAX_BULLETS} au maximum)</span>
           <textarea
             value={details}
             onChange={(event) => setDetails(event.target.value)}

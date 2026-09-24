@@ -433,6 +433,27 @@ restricted = next(
 )
 check(restricted["members"], [alice], "nouveau profil absent d'une tâche réservée")
 
+# --- Bornes des détails -----------------------------------------------------
+
+for label, bullets in (
+    ("21 puces refusées", [f"puce {i}" for i in range(21)]),
+    ("puce de 201 caractères refusée", ["x" * 201]),
+):
+    try:
+        call("POST", "/api/tiles", {"section": "oneoff", "title": "Trop", "bullets": bullets})
+        raise AssertionError(label)
+    except urllib.error.HTTPError as error:
+        check(error.code, 422, label)
+twenty = call(
+    "POST", "/api/tiles", {"section": "oneoff", "title": "Pile", "bullets": ["x" * 200] * 20}
+)
+check(len(twenty["bullets"]), 20, "20 puces de 200 caractères acceptées")
+try:
+    call("PATCH", f"/api/tiles/{twenty['id']}", {"bullets": ["y"] * 21})
+    raise AssertionError("21 puces en modification")
+except urllib.error.HTTPError as error:
+    check(error.code, 422, "21 puces refusées en modification")
+
 # --- Suppression en cascade -------------------------------------------------
 
 call("DELETE", f"/api/tiles/{folder['id']}")

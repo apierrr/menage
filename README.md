@@ -25,7 +25,7 @@ Réglages facultatifs, dans un fichier `.env` à côté du `docker-compose.yml` 
 | `SHARE_WINDOW_DAYS` | `90`            | Fenêtre de la jauge des tâches ponctuelles             |
 | `SECRET_KEY`        | générée         | Clé du cookie ; sinon créée dans `data/secret.key`     |
 
-Sur le téléphone, « Ajouter à l'écran d'accueil » installe l'application en
+Sur le téléphone, "Ajouter à l'écran d'accueil" installe l'application en
 plein écran (manifeste PWA + icônes fournis).
 
 ### Exposer l'app
@@ -36,7 +36,7 @@ profil, et créer, modifier ou supprimer tuiles, profils et historique. Par
 défaut, le port n'est donc publié que sur `127.0.0.1`.
 
 Pour l'ouvrir au-delà de la machine, mettre devant un contrôle d'accès
-(Cloudflare Access, authentification du reverse proxy, VPN…). Un sous-domaine
+(Cloudflare Access, authentification du reverse proxy, VPN...). Un sous-domaine
 difficile à deviner n'en est pas un : les enregistrements DNS se découvrent.
 
 Derrière un reverse proxy ou un tunnel sur un réseau Docker partagé, un
@@ -58,29 +58,29 @@ Le proxy joint alors `http://<CONTAINER_NAME>:<PORT>`.
 
 ## Parcours
 
-1. **Première ouverture** — combien de personnes, puis une tuile par personne
+1. Première ouverture : combien de personnes, puis une tuile par personne
    (prénom + couleur, via le crayon en bas de la tuile).
-2. **Choix du profil** — l'identité est retenue dans un cookie signé d'un an.
+2. Choix du profil : l'identité est retenue dans un cookie signé d'un an.
    On en change depuis le récapitulatif (sigle en haut à gauche).
-3. **Accueil** — deux tuiles pleine largeur : *Régulière* et *Ponctuelle*.
-4. **Dans un menu** — le pinceau en haut à droite ouvre le mode édition :
+3. Accueil : deux tuiles pleine largeur, *Régulière* et *Ponctuelle*.
+4. Dans un menu, le pinceau en haut à droite ouvre le mode édition :
    croix de suppression (avec confirmation), crayon de réglages, appui
    maintenu pour réordonner, et menu flottant en bas pour créer une tuile ou
    un sous-menu.
-5. **Récapitulatif** — le sigle en haut à gauche ouvre les indicateurs globaux
+5. Récapitulatif : le sigle en haut à gauche ouvre les indicateurs globaux
    et individuels, d'où l'on atteint l'historique des validations et le
    changement de profil.
 
 ## Les règles
 
-**Décompte** — en jours pleins, heure de Paris. Un compteur perd un jour au
+Décompte : en jours pleins, heure de Paris. Un compteur perd un jour au
 passage de minuit, pas 24 h après la validation. Passé l'échéance il devient
 négatif et la tuile passe au rouge. Le rouge est réservé à cet état : il est
 absent du sélecteur de couleurs et refusé par l'API.
 
-**Couleurs** — dans la section régulière, rien n'a de couleur choisie. Une
+Couleurs : dans la section régulière, rien n'a de couleur choisie. Une
 tâche porte celle de la personne qui doit la faire, et en change donc à chaque
-rotation : ni sélecteur de couleur, ni étiquette avec le prénom — la couleur
+rotation : ni sélecteur de couleur, ni étiquette avec le prénom. La couleur
 suffit. Quand la tâche passe en retard, la tuile devient rouge et un liseré sur
 le bord gauche rappelle de qui il s'agit.
 
@@ -95,8 +95,8 @@ lisible d'une bande à l'autre.
 Les tâches ponctuelles et leurs sous-menus, qui n'ont pas de responsable,
 gardent leur propre couleur.
 
-**Le compteur repart à zéro** — valider veut dire « c'est fait », pas « ajoute
-une période ». Dès que quelqu'un fait une tâche hebdomadaire, elle est à refaire
+Le compteur repart à zéro : valider veut dire "c'est fait", pas "ajoute
+une période". Dès que quelqu'un fait une tâche hebdomadaire, elle est à refaire
 dans sept jours pleins, qu'elle ait été faite en avance, à l'heure ou avec trois
 semaines de retard. L'échéance ne dépend donc que de la dernière validation, et
 jamais de l'échéance précédente.
@@ -104,15 +104,15 @@ jamais de l'échéance précédente.
 Il en découle que rappuyer ne déplace rien. Un second appui sur une tâche
 régulière déjà validée dans la journée n'enregistre pas de doublon, ne fait pas
 tourner le responsable et laisse l'échéance en place ; la tuile affiche
-« ✓ faite » jusqu'au lendemain et le message le rappelle. Si c'est *quelqu'un
-d'autre* qui la valide le même jour, sa validation compte pour lui — mais
+"faite" (avec une coche) jusqu'au lendemain et le message le rappelle. Si c'est *quelqu'un
+d'autre* qui la valide le même jour, sa validation compte pour lui, mais
 l'échéance, elle, n'est calculée qu'une fois. Les tâches ponctuelles se
 valident autant de fois qu'on les fait.
 
-**Rythme quotidien** — une tâche « tous les jours » est à faire dès le jour
+Rythme quotidien : une tâche "tous les jours" est à faire dès le jour
 de sa création ; validée, elle revient le lendemain.
 
-**Personnes concernées** — chaque tâche peut être réservée à certains profils.
+Personnes concernées : chaque tâche peut être réservée à certains profils.
 Rien de coché (ou tout le monde) : la tâche concerne tout le monde, y compris
 les profils ajoutés plus tard. Sinon, la rotation ne tourne qu'entre ces
 personnes (une seule : c'est toujours elle), et la jauge d'une tâche
@@ -120,41 +120,41 @@ ponctuelle ne compare qu'elles. N'importe qui peut quand même valider. Décoche
 le responsable passe la main au suivant ; si toutes les personnes cochées sont
 supprimées, la tâche revient à tout le monde. Stocké dans `tile_members`.
 
-**Rythme mensuel** — on mémorise le jour *voulu* (l'ancrage). Une tâche calée
+Rythme mensuel : on mémorise le jour *voulu* (l'ancrage). Une tâche calée
 sur le 31 tombe au 28 février (29 les années bissextiles) puis revient au 31
 mars. Faite un autre jour que celui prévu, c'est ce jour-là qui devient la
 nouvelle référence.
 
-**Rotation** — réglable par tâche :
+Rotation, réglable par tâche :
 
-- *Équité* (défaut) — revient à qui l'a faite le moins souvent ; à égalité, à
+- *Équité* (défaut) : revient à qui l'a faite le moins souvent ; à égalité, à
   qui l'a faite il y a le plus longtemps, puis l'ordre des profils. Quelqu'un
   en retard sur une tâche peut donc l'enchaîner, le temps de rattraper.
-- *Chacun son tour* — la personne suivante dans l'ordre des profils.
+- *Chacun son tour* : la personne suivante dans l'ordre des profils.
 
 À la création, on choisit qui commence ; la rotation prend le relais à la
 première validation. Un profil ajouté plus tard est crédité du minimum
 constaté sur chaque tâche, pour ne pas hériter de tout d'un coup.
 
-**Tâches ponctuelles** — la barre montre la répartition des validations sur
+Tâches ponctuelles : la barre montre la répartition des validations sur
 une fenêtre glissante de 90 jours (`SHARE_WINDOW_DAYS`). Vert = toi (toujours
-à gauche), gris = les autres. Le trait blanc marque le **partage égal** : 50 %
+à gauche), gris = les autres. Le trait blanc marque le partage égal : 50 %
 à deux, 33 % à trois. Si le vert le dépasse, tu en fais plus que ta part.
 
-Sous la barre, des **nombres de fois** plutôt que des pourcentages — à 3 contre
-2, un « 60 % / 40 % » ferait passer un écart d'une seule fois pour un gouffre —
+Sous la barre, des nombres de fois plutôt que des pourcentages (à 3 contre
+2, un "60 % / 40 %" ferait passer un écart d'une seule fois pour un gouffre),
 et un verdict : *à l'équilibre*, *1 de plus*, *4 de moins*. Il compare ton
 compteur à la moyenne des autres.
 
-**Tri de la page Régulière** — tes tâches d'abord, la plus urgente en tête.
+Tri de la page Régulière : tes tâches d'abord, la plus urgente en tête.
 Le sélecteur *Ordre* en haut permet de basculer sur ton propre classement
 (celui du glisser-déposer).
 
-**Annulation** — après une validation, un message propose « Annuler » pendant
+Annulation : après une validation, un message propose "Annuler" pendant
 quelques secondes ; l'échéance et le responsable précédents sont restaurés à
 l'identique.
 
-**Historique** — le récapitulatif mène au journal des validations, groupées par
+Historique : le récapitulatif mène au journal des validations, groupées par
 jour. Chacune peut être supprimée. Supprimer la *dernière* validation d'une
 tuile restaure son échéance et son responsable d'avant ; supprimer une
 validation plus ancienne la retire seulement des compteurs, sans recalculer
@@ -163,11 +163,11 @@ confirmation le dit explicitement.
 
 ## Piège connu : les bloqueurs de publicité
 
-Les classes CSS de l'indicateur s'appellent `tally-*` et **ne doivent pas**
-être renommées en `share-*`. La liste « EasyList Social Widgets », activable
+Les classes CSS de l'indicateur s'appellent `tally-*` et ne doivent pas
+être renommées en `share-*`. La liste "EasyList Social Widgets", activable
 dans uBlock Origin, contient les filtres nus `##.share-bar` et
 `##.share-legend` : la jauge et les chiffres étaient masqués par le navigateur,
-alors que le panneau qui les contient restait visible — d'où un encart vide
+alors que le panneau qui les contient restait visible, d'où un encart vide
 particulièrement déroutant à diagnostiquer.
 
 Avant d'ajouter une classe, un identifiant ou une route d'API, vérifier qu'elle
@@ -179,9 +179,9 @@ script de contrôle est dans `tests/check_classes.py`.
 
 Un seul container, construit en deux étages :
 
-- `web/` — React + Vite (moteur de tuiles, glisser-déposer dnd-kit), compilé
+- `web/` : React + Vite (moteur de tuiles, glisser-déposer dnd-kit), compilé
   en statique.
-- `app/` — FastAPI + SQLAlchemy + SQLite, sert l'API sous `/api` et le front
+- `app/` : FastAPI + SQLAlchemy + SQLite, sert l'API sous `/api` et le front
   pour tout le reste.
 
 Points d'entrée utiles :
@@ -190,7 +190,7 @@ Points d'entrée utiles :
 | -------------------- | -------------------------------------------------------- |
 | `app/scheduling.py`  | Moteur de dates et de rotation (fonctions pures)          |
 | `app/service.py`     | Lecture des tuiles, validation, statistiques              |
-| `app/models.py`      | Modèle de données — une seule table porte la navigation   |
+| `app/models.py`      | Modèle de données : une seule table porte la navigation   |
 | `web/src/components/TileGrid.jsx` | Grille et glisser-déposer                   |
 | `web/src/components/TileCard.jsx` | Rendu d'une tuile selon son type            |
 
